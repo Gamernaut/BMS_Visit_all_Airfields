@@ -10,9 +10,8 @@
 #
 ###########################################################################################
 
-import pandas, itertools
+import pandas
 from Haversine import haversine_distance
-
 
 # First read in all the airfields lat/log/alt values into a pandas dataframe
 airfield_locations = pandas.read_csv('test_BMS_Airfield_Locations.csv')  # change to none test version
@@ -27,8 +26,8 @@ for i in airfield_locations.index:
         distance = haversine_distance(coord1, coord2)
         haversine_distances_list.append(round(distance, 3))
     airfield = airfield_locations.at[i, 'Airfield']
-    airfield_locations[airfield] = haversine_distances_list   # Add a new column of distances to the dataframe
-                                                                    # under the airfield name
+    # Add a new column of distances to the dataframe under the airfield name
+    airfield_locations[airfield] = haversine_distances_list
 
 # write dataframe to file for manual checking code
 airfield_locations.to_csv('dataframe_distances.csv')
@@ -41,21 +40,19 @@ for row in airfield_locations.index:
     current_airfield = airfield_locations.at[row, 'Airfield']
     current_route = [[current_airfield, 0.0]]
     # Per distances in a column for a specific airfield loop
-    for count in range(airfield_count-1):
+    for count in range(airfield_count - 1):
         distances = airfield_locations.reset_index()[['Airfield', current_airfield]].values.tolist()
         best_distance = 1000
         best_airfield = ''
-        # Here we deal with each airflied in relatoin t
         for airfield, distance in distances:
-            if not any(airfield in sl for sl in current_route):   # exclude airfields already in the list (the
-                                                    # one added in the last loop will be closest) avoids endless loop
+            if not any(airfield in sl for sl in current_route):  # exclude airfields already in the list (the
+                # one added in the last loop will be closest) avoids endless loop
                 if float(distance) < best_distance and float(distance) > 0:
                     best_distance = float(distance)
                     best_airfield = airfield
         current_route.append([best_airfield, best_distance])
         current_airfield = best_airfield
     list_of_routes.append(current_route)
-
 
 shortest_dist = 100000.0
 shortest_route = []
@@ -71,7 +68,7 @@ print(f'Shortest route is {shortest_dist:4.1f} miles\n')
 steerpoint = 1
 for airfield in shortest_route:
     name = airfield[0]
-
-    print(f'Steerpoint {steerpoint} ' + 'is ' + str(name))
-    #print(airfield)
+    miles = airfield[1]
+    print(f'Steerpoint {steerpoint} is {str(name)} which is {miles} miles from previous steerpoint')
+    # print(airfield)
     steerpoint += 1

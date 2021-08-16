@@ -16,9 +16,9 @@
 
 import math
 
-''' Uses Haversine formula to calculate the distance between 2 Latitude/Longitude coordinates in miles.
+"""Uses Haversine formula to calculate the distance between 2 Latitude/Longitude coordinates in miles.
 @inputs - 2 tuples each of which represents a pair of Latitudinal and Longitudinal values as decimals
-@returns - the distance between them in miles '''
+@returns - the distance between them in miles"""
 
 
 def haversine_distance(location1, location2):

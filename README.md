@@ -12,7 +12,7 @@ Whilst playing Falcone BMS, an F16 flight simulator game, I wondered if it was p
 
 <h3>Languages/Packages:</h3>
 <ul>
-<li>Python (PyCharm IDE from JetBrains)</li>
+<li>Python 3.9 (PyCharm IDE from JetBrains)</li>
 <li>Pandas</li>
 <li>NumPy</li>
 </ul>

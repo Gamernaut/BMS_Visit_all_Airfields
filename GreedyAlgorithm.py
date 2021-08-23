@@ -1,15 +1,15 @@
-###########################################################################################
+#######################################################################################################################
 #
 #   Author:         Carmelo Volpe
 #
 #   Date:           August 2021
 #
-#   Description:    Encapsulates the search algorithm to find the shortest route, in miles, visiting every airfield
-#                   in the input file at least once but not returning to the start airfield (not the same as the
-#                   classic travelling salesman problem). Uses a Greedy algorithm approach by focusing on the next
-#                   closest airfield to the current one. May not be globally optimal but checking all combinations
-#                   is a factorial expansion, the 48 airfields north of the DMZ in Falcon BMS would mean checking
-#                   1.2E61 combinations.
+#   Description:    Encapsulates the search algorithm to find the shortest route, in miles, of visiting
+#                   every airfield in the input file at least once but not returning to the start airfield
+#                   (not the same as the classic travelling salesman problem). Uses a Greedy algorithm approach
+#                   by focusing on the next closest airfield to the current one. May not be globally optimal
+#                   but checking all combinations is a factorial expansion, the 48 airfields north of the DMZ
+#                   in Falcon BMS would mean checking 1.2E61 combinations.
 #
 #                   The algorithm starts at the first airfield in the input file and then finds the closest airfield.
 #                   It adds this to the route and then uses this airfield as the current airfield and finds the
@@ -17,15 +17,18 @@
 #                   in the file and repeats the process. The result is a 2D array/list of lists of the shortest
 #                   routes starting from every airfield in the input file.
 #
-###########################################################################################
+#######################################################################################################################
 
 import sys
-from Haversine import haversine_distance
+import time
+from Utility_Functions import haversine_distance
+from Utility_Functions import load_dataframe
 
 
 class MinimumContinuousRoute:
-    def __init__(self, airfield_dataframe=None):
-        self.airfields_df = airfield_dataframe
+    def __init__(self, filename):
+        self.data_input_file = filename
+        self.airfields_df = load_dataframe(self.data_input_file)
         self.total_distance = 0.0
         self.list_of_routes = []
         self.airfield_count = self.airfields_df['Airfield'].count() - 1
@@ -51,16 +54,18 @@ class MinimumContinuousRoute:
             self.airfields_df[airfield] = haversine_distances_list
 
     def calculate_all_route_distances(self):
-        # total_distance = 0.0
-        # list_of_routes = []
+        """ Simple algorithm which starts at an airfield and then looks for the next nearest excluding any that
+         have already been visited """
+        start_time = time.perf_counter()
         # Per row in input file loop
         for row in self.airfields_df.index:
             current_airfield = self.airfields_df.at[row, 'Airfield']
             current_route = [[current_airfield, 0.0]]
             # Per distances in a column for a specific airfield loop
             pct_complete = (row / self.airfield_count) * 100
-            sys.stdout.write(f"\rProcessing airfields : %d%% completed - Currently processing {current_airfield}"
-                             % pct_complete)  # Prints on the same line
+            estimated_secs_remaining = ((time.perf_counter() - start_time)/(row + 1)) * (self.airfield_count - row)
+            sys.stdout.write(f"\rProcessing airfields : %d%% completed - Time remaining {estimated_secs_remaining:3.3}"
+                             f" seconds" % pct_complete)  # Prints on the same line
             for count in range(self.airfield_count):
                 distances = self.airfields_df.reset_index()[['Airfield', current_airfield]].values.tolist()
                 best_distance = 1000
@@ -77,6 +82,7 @@ class MinimumContinuousRoute:
             self.list_of_routes.append(current_route)
 
     def find_shortest_route(self):
+        """Adds up the distances in each route, keeping a track of which is the shortest so far"""
         total_distance = 0.0
         for route in self.list_of_routes:
             for element in route:
@@ -87,6 +93,7 @@ class MinimumContinuousRoute:
             total_distance = 0.0
 
     def print_shortest_route(self):
+        """Prints out the shortest route in a more human friendly format than just displaying the list"""
         print(f'\n\nShortest route is {self.shortest_dist:4.1f} miles')
         steerpoint = 1
         for airfield in self.shortest_route:
@@ -97,4 +104,6 @@ class MinimumContinuousRoute:
             steerpoint += 1
 
     def save_dataframe(self):
+        """Saves the dataframe to a .csv file. Usually called after the dataframe has been populated with all the
+        Haversine distances between every airfield so that the algorithm can be checked manually"""
         self.airfields_df.to_csv('dataframe_distances_MCR_algo.csv')

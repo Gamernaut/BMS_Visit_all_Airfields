@@ -1,7 +1,7 @@
 <h2>Interesting alternative to the Travelling Salesman Problem</h2>
 
 <h3>Inspiration:</h3>
-Whilst playing Falcon BMS, an F16 flight simulator, I wondered if it was possible to find the quickest/shortest route to visit every airfield in the sim once (i.e. every airbase, airstrip etc.). There would be no need to return to the starting airfield so it was more of a linear ruote than a circular route. <BR><BR> 
+Whilst playing Falcon BMS, an F16 flight simulator, I wondered if it was possible to find the quickest/shortest route to visit every airfield in the sim once (i.e. every airbase, airstrip etc.). There would be no need to return to the starting airfield so it was more of a linear route than a circular route. <BR><BR> 
 
 <h3>Techniques used:</h3>
 <ul>

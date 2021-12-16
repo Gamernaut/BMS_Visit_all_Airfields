@@ -5,6 +5,8 @@ Whilst playing Falcon BMS, an F16 flight simulator, I wondered if it was possibl
 
 Idea is to try mulitple algorithms to understand the perfroamce versus accuracy of different apporches and to gain experince applying a coupe of different types of algorithms to this problem.
 
+_This is a learning exercise for me to implement a number of classical and non-classic algorithms to understand the strengths and weaknesses and is still a work in progress._
+
 ### Techniques used/Learnings:
 - Haversine formula to calculate the distance, in miles, between 2 pairs of Latitude/Longitude coordinates (formula accounts for the curvature of the Earth)
 - Greedy Algorithm (minimum continuous route) - Simple algorithm that looks for next closest airfield in a continuous route
@@ -15,4 +17,4 @@ Idea is to try mulitple algorithms to understand the perfroamce versus accuracy 
 - Pandas
 - NumPy
   
-_This is a learning exercise for me to implement a number of classical and non-classic algorithms to understand the strengths and weaknesses._
+
